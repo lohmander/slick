@@ -1,0 +1,4 @@
+greet
+    : string, int -> (bool, [char])
+    | "Hannes", _ -> "Hello Hannes!"
+    | name, age   -> "Hi {{name}} of age {{age}}"
