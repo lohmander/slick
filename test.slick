@@ -1,12 +1,3 @@
-greet
-    : string, int -> (bool, [char])
-    | "Hannes", _ -> ("Hello Hannes!")
-    | name, age   -> "Hi {{name}} of age {{age}}"
-
 power
-    : a -> int
-    | x -> 'a'
-
-map
-    : (a -> b), [a] -> [b]
-    | f, l -> l
+    : int -> int
+    | x -> x + 4

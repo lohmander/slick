@@ -51,4 +51,9 @@ data Expr
 
 data Op
     = OpPlus
+    | OpMinus
+    | OpMultiply
+    | OpDivide
+    | OpExpo
+    | OpRemain
     deriving (Eq, Show)

@@ -16,27 +16,31 @@ import           Parser.Lexer
 
 pExpr :: Parser Expr
 pExpr = try pParens
-    <|> try pVar
+    <|> try aExpr
+    <|> try pTerm
+    <|> try pDiscard
+
+
+pTerm :: Parser Expr
+pTerm = try pVar
     <|> try pInt
     <|> try pString
     <|> try pChar
-    <|> try pDiscard
-    <|> try aExpr
 
 
 aOp :: [[Operator Parser Expr]]
 aOp =
-    [ [ InfixL (plus *> pure (AOp OpPlus)) ] ]
+    [ [ InfixL (times *> pure (AOp OpMultiply))
+      , InfixL (slash *> pure (AOp OpDivide))
+      ]
+    , [ InfixL (plus *> pure (AOp OpPlus))
+      , InfixL (minus *> pure (AOp OpMinus))
+      ]
+    ]
 
 
 aExpr :: Parser Expr
-aExpr = makeExprParser pExpr aOp
-
-
-pParens :: Parser Expr
-pParens = do
-    expr <- parens pExpr
-    return $ ExprParens expr
+aExpr = makeExprParser pTerm aOp
 
 
 pVar :: Parser Expr
@@ -51,12 +55,6 @@ pInt = do
     return $ ExprLit $ LitInt int
 
 
-pDiscard :: Parser Expr
-pDiscard = do
-    underscore
-    return ExprDiscard
-
-
 pString :: Parser Expr
 pString = do
     str <- P.between quote quote string
@@ -67,6 +65,19 @@ pChar :: Parser Expr
 pChar = do
     chr <- P.between squote squote char
     return $ ExprLit $ LitChar chr
+
+
+pParens :: Parser Expr
+pParens = do
+    expr <- parens pExpr
+    return $ ExprParens expr
+
+
+pDiscard :: Parser Expr
+pDiscard = do
+    underscore
+    return ExprDiscard
+
 
 
 pCase :: Parser Expr
