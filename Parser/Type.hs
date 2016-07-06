@@ -17,7 +17,8 @@ import           Parser.Lexer
 
 
 pType :: Parser Type
-pType = try pListType
+pType = try pFuncType
+    <|> try pListType
     <|> try pTupleType
     <|> try pPrimType
 
@@ -34,6 +35,19 @@ pTupleType = do
     return $ TypeTuple types
 
 
+pFuncType :: Parser Type
+pFuncType = do
+    type' <- parens p
+    return type'
+  where
+    p = L.lineFold scn $ \sc' -> do
+      params <- P.sepBy pType comma
+      sc'
+      arrow
+      sc'
+      returns <- pType
+      return $ TypeFunc params returns
+
 pPrimType :: Parser Type
 pPrimType = do
     typeStr <- ident
@@ -44,3 +58,4 @@ pPrimType = do
           "float"  -> TypeFloat
           "bool"   -> TypeBool
           "char"   -> TypeChar
+          x        -> TypeGeneric x

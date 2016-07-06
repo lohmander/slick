@@ -20,27 +20,17 @@ pDecl = try pFunc
 pFunc :: Parser Decl
 pFunc = L.indentBlock scn p
   where
+    ps = L.lineFold scn $ \sc' -> do
+      colon
+      params <- P.sepBy pType comma
+      sc'
+      arrow
+      sc'
+      returns <- pType
+      return $ DeclSign params returns
+
     p = do
-        name <- ident
-        sign <- pFuncSign
-        return (L.IndentMany Nothing (return . \c -> DeclFunc name sign c) pCase)
-
-
-pFuncSign :: Parser Decl
-pFuncSign = L.lineFold scn $ \sc' -> do
-    colon
-    params <- P.sepBy pTypeDecl comma
-    sc'
-    arrow
-    sc'
-    rtrn <- pTypeDecl
-    return $ DeclSign params rtrn
-
-
-pTypeDecl :: Parser Decl
-pTypeDecl = do
-    type' <- pType
-    return $ DeclType type'
-
-
+      name <- ident
+      sign <- ps
+      return (L.IndentMany Nothing (return . \c -> DeclFunc name sign c) pCase)
 

@@ -3,6 +3,7 @@ module AST
     , Decl(..)
     , Expr(..)
     , Type(..)
+    , Op(..)
     ) where
 
 
@@ -22,6 +23,8 @@ data Type
     | TypeInt
     | TypeFloat
     | TypeBool
+    | TypeGeneric String
+    | TypeFunc [Type] Type
     | TypeList Type
     | TypeTuple [Type]
     deriving (Eq, Show)
@@ -31,13 +34,14 @@ type TypeDecl = ([Type], [Type])
 
 data Decl
     = DeclFunc String Decl [Expr]
-    | DeclSign [Decl] Decl
-    | DeclType Type
+    | DeclSign [Type] Type
     deriving (Eq, Show)
 
 
 data Expr
-    = ExprLit Lit
+    = ExprParens Expr
+    | ExprLit Lit
+    | AOp Op Expr Expr
     | ExprStringInterpolation [Expr]
     | ExprVar String
     | ExprDiscard
@@ -45,3 +49,6 @@ data Expr
     | ExprMatch [Expr]
     deriving (Eq, Show)
 
+data Op
+    = OpPlus
+    deriving (Eq, Show)

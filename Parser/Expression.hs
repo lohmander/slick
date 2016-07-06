@@ -15,11 +15,28 @@ import           Parser.Lexer
 
 
 pExpr :: Parser Expr
-pExpr = try pVar
+pExpr = try pParens
+    <|> try pVar
     <|> try pInt
     <|> try pString
     <|> try pChar
     <|> try pDiscard
+    <|> try aExpr
+
+
+aOp :: [[Operator Parser Expr]]
+aOp =
+    [ [ InfixL (plus *> pure (AOp OpPlus)) ] ]
+
+
+aExpr :: Parser Expr
+aExpr = makeExprParser pExpr aOp
+
+
+pParens :: Parser Expr
+pParens = do
+    expr <- parens pExpr
+    return $ ExprParens expr
 
 
 pVar :: Parser Expr
