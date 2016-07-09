@@ -8,18 +8,16 @@ module AST
 
 
 data Lit
-    = LitString String
-    | LitChar Char
+    = LitChar Char
     | LitInt Integer
     | LitFloat Float
     | LitBool Bool
-    | LitArray [Expr]
+    | LitList [Expr]
     deriving (Eq, Show)
 
 
 data Type
-    = TypeString
-    | TypeChar
+    =  TypeChar
     | TypeInt
     | TypeFloat
     | TypeBool

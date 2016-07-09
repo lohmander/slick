@@ -4,6 +4,7 @@ module Parser.Expression
   , pCase
   ) where
 
+import           Data.List
 import           Text.Megaparsec        (try, (<|>))
 import qualified Text.Megaparsec        as P
 import           Text.Megaparsec.Expr
@@ -58,7 +59,7 @@ pInt = do
 pString :: Parser Expr
 pString = do
     str <- P.between quote quote string
-    return $ ExprLit $ LitString str
+    return $ ExprLit $ LitList $ map (\c -> ExprLit $ LitChar c) str
 
 
 pChar :: Parser Expr

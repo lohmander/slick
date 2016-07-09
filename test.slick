@@ -1,3 +1,6 @@
 power
-    : int -> int
+    : Int, String -> Int
     | x -> x + 4
+    | x -> "nope"
+
+

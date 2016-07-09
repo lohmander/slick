@@ -53,9 +53,9 @@ pPrimType = do
     typeStr <- ident
     return $
       case typeStr of
-          "string" -> TypeString
-          "int"    -> TypeInt
-          "float"  -> TypeFloat
-          "bool"   -> TypeBool
-          "char"   -> TypeChar
+          "String" -> TypeList TypeChar
+          "Int"    -> TypeInt
+          "Float"  -> TypeFloat
+          "Bool"   -> TypeBool
+          "Char"   -> TypeChar
           x        -> TypeGeneric x
